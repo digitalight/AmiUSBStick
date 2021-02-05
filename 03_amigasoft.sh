@@ -16,7 +16,7 @@ apt-cache search linux-image
 
 apt-get update && \
 apt-get install -y --no-install-recommends \
-    linux-image-amd64 \
+    linux-image-4.19.0-13-amd64 \
     live-boot gnupg2 ca-certificates locales \
     systemd-sysv
 
@@ -26,11 +26,23 @@ apt-key add - < Release.key
  apt-get update && \
   apt-get install -y --no-install-recommends \
   network-manager net-tools wireless-tools wpagui curl \
-  blackbox xserver-xorg-core xserver-xorg xinit xterm \
-  lxde lxterminal pcmanfm fs-uae fs-uae-launcher \
+  xserver-xorg-core xserver-xorg xinit \
+  lightdm lxde lxterminal pcmanfm openbox fs-uae fs-uae-launcher \
   nano && \
 
 apt-get clean
+
+echo "exec startlxde" > /root/.xinitrc
+chmod 755 /root/.xinitrc
+
+cat > /etc/lightdm/lightdm.conf<< EOF
+[LightDM]
+[Seat:*]
+autologin-guest=false
+autologin-user=root
+autologin-user-timeout=0
+autologin-session=LXDE
+EOF
 
 mkdir -p /root/.config/lxsession/LXDE
 echo "@fs-uae-launcher" > /root/.config/lxsession/LXDE/autostart
